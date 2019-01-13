@@ -6,14 +6,14 @@
     fxLayoutGap="10px" 
     fxLayoutGap.xs="0">
 
-    <div fxFlex="40" *ngIf="dish" [@visibility]="visibility" [@expand]>
+    <div fxFlex="40" *ngIf="dish" [@visibility]="visibilityF" [@expand]>
     <mat-card>
       <mat-card-header>
         <mat-card-title>
           <h3 *ngIf="dish">{{dish.name | uppercase}}</h3>
         </mat-card-title>
       </mat-card-header>
-      <img mat-card-image src="{{ baseURL + dish.image }}" alt={{dish.name}}>
+      <img mat-card-image src="{{ baseUrl + dish.image }}" alt={{dish.name}}>
       <mat-card-content>
         <p>{{dish.description}}
         </p>

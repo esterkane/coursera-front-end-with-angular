@@ -59,9 +59,42 @@
               <input matInput formControlName="email" placeholder="Email" type="email" email required>
               <mat-error *ngIf="formErrors.email">{{formErrors.email}}</mat-error>
             </mat-form-field>
-      </p>
+           </p>
+           <table class="form-size">
+              <td>
+                <mat-slide-toggle formControlName="agree">May we contact you?</mat-slide-toggle>
+              </td>
+              <td>
+                <mat-select placeholder="How?" formControlName="contacttype">
+                  <mat-option *ngFor="let ctype of contactType" [value]="ctype">
+                    {{ ctype }}
+                  </mat-option>
+                </mat-select>
+              </td>
+              </table>
+            <p>
+              <mat-form-field class="full-width">
+                <textarea matInput formControlName="message" placeholder="Your Feedback" rows=12></textarea>
+              </mat-form-field>
+            </p>
         <button type="submit" mat-button class="background-primary text-floral-white">Submit</button>
       </form>
     </div>
+
+
+    <div [hidden]="showFeedbackForm || feedbackcopy" [@expand]>
+      <mat-spinner></mat-spinner><h4>Loading... Please wait</h4>
+    </div>
+
+    <div class="flex" *ngIf="feedbackcopy" [@expand]> <!-- "*ngIf = "feedback" -->
+        <h3>Your submission</h3>
+        <p>First Name: {{feedbackcopy.firstname}}</p>
+        <p>Last Name: {{feedbackcopy.lastname}}</p>
+        <p>Tel. number: {{feedbackcopy.telnum}}</p>
+        <p>Email: {{feedbackcopy.email}}</p>
+        <p>Contact You?: {{feedbackcopy.agree}}</p>
+        <p>How?: {{feedbackcopy.contacttype}}</p>
+        <p>Feedback: {{feedbackcopy.message}}</p>
+  </div>
 
 </div>

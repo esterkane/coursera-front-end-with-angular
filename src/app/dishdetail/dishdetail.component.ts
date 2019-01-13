@@ -41,6 +41,8 @@ export class DishdetailComponent implements OnInit {
   errMess: string;
   visibility = 'shown';
 
+  baseUrl: string = 'assets/';
+
 
   formErrors = {
     'comment': '',

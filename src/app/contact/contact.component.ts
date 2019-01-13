@@ -1,20 +1,23 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FeedbackService } from '../services/feedback.service';
 import { Feedback, ContactType } from '../shared/feedback';
-import { flyInOut, expand } from '../animations/app.animation';
+import { flyInOut, expand, visibility } from '../animations/app.animation';
+import { baseURL } from '../shared/baseurl';
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss'],
-    // tslint:disable-next-line:use-host-property-decorator
+
     host: {
       '[@flyInOut]': 'true',
       'style': 'display: block;'
       },
       animations: [
         flyInOut(),
-        expand()
+        expand(),
+        visibility(),
       ]
 })
 export class ContactComponent implements OnInit {
@@ -24,6 +27,15 @@ export class ContactComponent implements OnInit {
   feedbackForm: FormGroup;
   feedback: Feedback;
   contactType = ContactType;
+  errMess: string;
+  firstname: string;
+  lastname: string;
+  feedbackcopy: Feedback = null;
+
+  showSpinner = false;
+  showFeedbackForm = true;
+  showFeedback = false;
+
 
   formErrors = {
     'firstname': '',
@@ -53,11 +65,13 @@ export class ContactComponent implements OnInit {
     },
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+    private feedbackservice: FeedbackService) {
     this.createForm();
   }
 
   ngOnInit() {
+  
   }
 
 
@@ -75,7 +89,7 @@ export class ContactComponent implements OnInit {
     this.feedbackForm.valueChanges
     .subscribe(data => this.onValueChanged(data));
 
-  this.onValueChanged(); // (re)set validation messages now
+  this.onValueChanged();
   }
 
   onValueChanged(data?: any) {
@@ -83,7 +97,6 @@ export class ContactComponent implements OnInit {
     const form = this.feedbackForm;
     for (const field in this.formErrors) {
       if (this.formErrors.hasOwnProperty(field)) {
-        // clear previous error message (if any)
         this.formErrors[field] = '';
         const control = form.get(field);
         if (control && control.dirty && !control.valid) {
@@ -98,10 +111,19 @@ export class ContactComponent implements OnInit {
     }
   }
 
-
   onSubmit() {
     this.feedback = this.feedbackForm.value;
     console.log(this.feedback);
+    this.showFeedbackForm = false;
+    this.feedbackservice.submitFeedback(this.feedback)
+      .subscribe(feedback => {
+         this.feedbackcopy = feedback;
+         this.feedback = null; 
+         setTimeout(() => { 
+           this.feedbackcopy = null; this.showFeedbackForm = true }, 5000); 
+        },
+        error => console.log(error.status, error.message));
+        
     this.feedbackForm.reset({
       firstname: '',
       lastname: '',
@@ -113,5 +135,7 @@ export class ContactComponent implements OnInit {
     });
     this.feedbackFormDirective.resetForm();
   }
+
+
 
 }

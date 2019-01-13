@@ -32,6 +32,8 @@ export class HomeComponent implements OnInit {
   leader: Leader;
   dishErrMess: string;
 
+  baseUrl: string = 'assets/';
+
   constructor(private dishservice: DishService,
     private promotionservice: PromotionService,
     private leaderservice: LeaderService,
